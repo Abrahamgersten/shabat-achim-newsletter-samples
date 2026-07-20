@@ -1,0 +1,4 @@
+scripts/video_frames/
+scripts/video_clips/
+scripts/__pycache__/
+*.pyc
