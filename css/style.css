@@ -110,10 +110,15 @@ body {
 .hero-trust { font-size: .98rem; color: var(--navy-2); margin-bottom: 22px; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
 .hero-note { font-size: .88rem; color: var(--ink-soft); }
-.hero-visual { position: relative; min-height: 320px; }
-.hero-img { position: absolute; border-radius: 14px; box-shadow: var(--shadow); }
-.hero-img-1 { width: 52%; top: 4%; inset-inline-start: 2%; transform: rotate(-6deg); z-index: 2; }
-.hero-img-2 { width: 60%; bottom: 2%; inset-inline-end: 0; transform: rotate(4deg); z-index: 1; }
+.hero-visual { display: flex; flex-direction: column; gap: 22px; }
+.hero-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 10px 10px 12px; box-shadow: var(--shadow);
+}
+.hero-card img { width: 100%; height: auto; border-radius: calc(var(--radius) - 6px); display: block; }
+.hero-card figcaption { text-align: center; font-size: .82rem; font-weight: 700; color: var(--ink-soft); padding-top: 8px; }
+.hero-card-1 { width: 72%; align-self: flex-end; }
+.hero-card-2 { width: 88%; align-self: flex-start; }
 @media (max-width: 899px) { .hero-visual { display: none; } }
 
 /* ===== Sections generic ===== */
