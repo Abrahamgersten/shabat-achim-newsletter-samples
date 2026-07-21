@@ -16,6 +16,7 @@ os.makedirs(OUT, exist_ok=True)
 
 W, H = 1280, 720
 FONT_FILE = os.path.join(SITE, "scripts", "fonts", "Heebo-Bold.ttf")
+EMOJI_FONT = r"C:\Windows\Fonts\seguiemj.ttf"
 
 BRAND_NAVY = (25, 51, 82)
 BRAND_YELLOW = (247, 183, 49)
@@ -134,6 +135,38 @@ def vertical_gradient(w, h, top_rgb, bottom_rgb):
     return Image.composite(bottom, top, mask)
 
 
+def make_icon_scene(name, emoji, top_rgb, bottom_rgb, caption, subcaption=None, accent=(255, 205, 92)):
+    base = vertical_gradient(W, H, top_rgb, bottom_rgb).convert("RGBA")
+    d = ImageDraw.Draw(base, "RGBA")
+
+    # big emoji icon in a soft circle
+    circle_r = 92
+    cx, cy = W // 2, 190
+    d.ellipse([cx - circle_r, cy - circle_r, cx + circle_r, cy + circle_r], fill=(255, 255, 255, 60))
+    font_emoji = ImageFont.truetype(EMOJI_FONT, 100)
+    bbox = font_emoji.getbbox(emoji)
+    tw = bbox[2] - bbox[0]
+    d.text((cx - tw / 2, cy - 85), emoji, font=font_emoji, embedded_color=True)
+
+    font_cap = font("Black", 52)
+    font_sub = font("Medium", 30)
+    lines = wrap_rtl_lines(d, caption, font_cap, W - 160)
+    y = 350
+    for ln in lines:
+        txt = rtl(ln)
+        tw = d.textlength(txt, font=font_cap)
+        d.text(((W - tw) / 2, y), txt, font=font_cap, fill=(255, 255, 255, 255))
+        y += 62
+    if subcaption:
+        y += 8
+        txt = rtl(subcaption)
+        tw = d.textlength(txt, font=font_sub)
+        d.text(((W - tw) / 2, y), txt, font=font_sub, fill=accent)
+
+    base.convert("RGB").save(os.path.join(OUT, f"{name}.png"), quality=95)
+    print("icon scene:", name)
+
+
 def make_title_card(name, logo_path, title, subtitle):
     base = vertical_gradient(W, H, (137, 205, 240), (75, 150, 205))
     d = ImageDraw.Draw(base)
@@ -206,64 +239,62 @@ if __name__ == "__main__":
     make_scene(
         "01_vertical",
         os.path.join(IMG, "covers", "vertical-1-p1.webp"),
-        "עלון אנכי",
-        "מעוצב במיוחד עבור בית הספר שלכם",
+        "עלון אנכי...",
         fit="contain",
     )
     make_scene(
         "02_horizontal",
         os.path.join(IMG, "covers", "horizontal-2-p1.webp"),
-        "או עלון אופקי, מתקפל לשניים",
+        "...או אופקי!",
         fit="contain",
     )
     make_scene(
         "03_styles",
         os.path.join(IMG, "design-styles", "style-2.webp"),
-        "עשרות כיוונים עיצוביים לבחירה",
-        "השם, הלוגו, הצבעים והדמויות - הכל אישי",
+        "עשרות כיווני עיצוב",
+        "השם, הצבעים, הדמויות - הכל אישי",
         fit="contain",
     )
     make_scene(
         "04_sections",
         os.path.join(IMG, "sections", "section-12.webp"),
-        "דבר תורה, חידות, קומיקס ועוד",
-        "מדורים תורניים ברמה גבוהה בכל שבוע",
+        "דבר תורה, חידות, קומיקס...",
+        "מדורים תורניים ברמה גבוהה, כל שבוע",
         fit="contain",
     )
+    make_icon_scene(
+        "05_writers", "📰",
+        (255, 154, 108), (224, 79, 59),
+        "התלמידים כותבים בעצמם!",
+        "צוות עלון - כתבים צעירים, בכל בית ספר",
+        accent=(255, 244, 214),
+    )
+    make_icon_scene(
+        "06_family", "🏠",
+        (76, 191, 143), (36, 132, 120),
+        "וגם המשפחה משחקת בבית",
+        "מברכים, שרים, קוראים בעלון - ומסמנים יחד",
+        accent=(255, 244, 214),
+    )
     make_scene(
-        "05_sharing",
+        "07_sharing",
         os.path.join(IMG, "sharing", "sharing-01.webp"),
-        "מקום קבוע לתוכן ולתמונות מבית הספר",
-        "כל מה שקורה אצלכם, מגיע הביתה",
+        "כל מה שקורה בבית הספר...",
+        "מגיע ישר הביתה",
         fit="cover",
     )
     make_scene(
-        "06_bw",
+        "08_bw",
         os.path.join(IMG, "covers", "color-and-bw-p1.webp"),
-        "קובץ צבעוני דיגיטלי, וקובץ להדפסה שחור-לבן",
+        "צבעוני + שחור-לבן להדפסה",
         "כל שבוע, שני הקבצים אצלכם",
         fit="contain",
     )
     make_scene(
-        "07_levels",
+        "09_levels",
         os.path.join(IMG, "covers", "age-older-p1.webp"),
-        "אפשר גם להתאים לפי שכבות גיל",
-        "עלון נפרד לצעירים ולבוגרים",
+        "ואפשר גם לפי שכבות גיל!",
         fit="contain",
-    )
-    make_scene(
-        "08_activity1",
-        os.path.join(IMG, "sharing", "sharing-04.webp"),
-        "לא רק עלון - חוויה חינוכית שלמה",
-        "כל חודש: מבצע ערכי חדש בבית הספר",
-        fit="cover",
-    )
-    make_scene(
-        "09_activity2",
-        os.path.join(IMG, "sharing", "sharing-02.webp"),
-        "ופעילות שממשיכה גם בבית, במשפחה",
-        "מפעילים תלמידים והורים יחד, סביב שולחן השבת",
-        fit="cover",
     )
 
     make_closing_card(
